@@ -1,5 +1,12 @@
 {
   "projects": {
     "default": "finrisk-99b78"
+  },
+  "targets": {
+    "finrisk-99b78": {
+      "hosting": {
+        "app": ["finrisk-99b78"]
+      }
+    }
   }
 }
