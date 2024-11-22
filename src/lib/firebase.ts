@@ -7,20 +7,16 @@ const firebaseConfig = {
   apiKey: "AIzaSyAOJhx93QD2cyudxIzzlWRpN6pHio3pxsE",
   authDomain: "finrisk-99b78.firebaseapp.com",
   projectId: "finrisk-99b78",
-  storageBucket: "finrisk-99b78.firebasestorage.app",
+  storageBucket: "finrisk-99b78.appspot.com",
   messagingSenderId: "282325061117",
   appId: "1:282325061117:web:4fd4fc0f11e468ea945d94",
   measurementId: "G-4PPPNFQ2BD"
 };
 
-console.log('Firebase Config:', {
-  apiKey: firebaseConfig.apiKey,
-  authDomain: firebaseConfig.authDomain,
-  projectId: firebaseConfig.projectId
-}); // For debugging
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Initialize services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
