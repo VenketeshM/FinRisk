@@ -2,12 +2,154 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    scroll-behavior: smooth;
+:root {
+  /* Light Theme */
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: #60a5fa;
+  --accent: #7c3aed;
+  --background: #ffffff;
+  --surface: #f8fafc;
+  --text: #0f172a;
+  --text-secondary: #475569;
+  --border: #e2e8f0;
+  --success: #059669;
+  --error: #dc2626;
+  --warning: #d97706;
+}
+
+[data-theme='dark'] {
+  /* Dark Theme - More sophisticated and eye-friendly */
+  --primary: #60a5fa;
+  --primary-dark: #3b82f6;
+  --primary-light: #93c5fd;
+  --accent: #a78bfa;
+  --background: #0f172a;
+  --surface: #1e293b;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #334155;
+  --success: #34d399;
+  --error: #f87171;
+  --warning: #fbbf24;
+}
+
+/* Financial Doodle Patterns */
+.doodle-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 0h60v60H0z'/%3E%3Cpath d='M10 10h40v40H10z' stroke='%23334155' stroke-width='0.5'/%3E%3Cpath d='M30 10v40M10 30h40' stroke='%23334155' stroke-width='0.5'/%3E%3Ccircle cx='30' cy='30' r='15' stroke='%23334155' stroke-width='0.5'/%3E%3Cpath d='M15 30a15 15 0 0130 0' stroke='%23334155' stroke-width='0.5'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Animated Gradient Background */
+.gradient-bg {
+  background: linear-gradient(
+    45deg,
+    var(--surface) 0%,
+    var(--background) 100%
+  );
+  position: relative;
+}
+
+.gradient-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    var(--primary-light) 0%,
+    var(--accent) 100%
+  );
+  opacity: 0.05;
+  mask-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0v60M0 30h60M0 0l60 60M60 0L0 60' stroke='%23000' stroke-width='0.5'/%3E%3C/svg%3E");
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Financial Chart Animations */
+@keyframes chartLine {
+  0% {
+    stroke-dashoffset: 1000;
   }
-  
-  body {
-    @apply antialiased text-gray-900;
+  100% {
+    stroke-dashoffset: 0;
   }
+}
+
+.animate-chart {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: chartLine 2s ease-out forwards;
+}
+
+/* Card Styles */
+.card {
+  @apply bg-surface rounded-xl shadow-lg hover:shadow-xl transition-all duration-300;
+  background-image: linear-gradient(
+    135deg,
+    var(--surface) 0%,
+    var(--background) 100%
+  );
+  border: 1px solid var(--border);
+}
+
+.card-hover {
+  @apply hover:scale-[1.02] hover:shadow-lg transition-all duration-300;
+}
+
+/* Button Styles */
+.btn-primary {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-300;
+  background: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    var(--accent) 100%
+  );
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* Input Styles */
+.input-primary {
+  @apply px-4 py-2 rounded-lg border border-border bg-background text-text;
+  transition: all 0.3s ease;
+}
+
+.input-primary:focus {
+  @apply outline-none ring-2 ring-primary/20 border-primary;
+}
+
+/* Tag Styles */
+.tag {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  background: linear-gradient(
+    135deg,
+    var(--primary-light) 0%,
+    var(--accent) 100%
+  );
+  color: var(--text);
+  opacity: 0.8;
 }

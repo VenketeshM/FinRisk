@@ -1,7 +1,6 @@
 {
   "hosting": {
     "public": "dist",
-    "site": "finrisk-99b78",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -18,20 +17,58 @@
         "source": "**/*.@(js|css)",
         "headers": [
           {
+            "key": "Content-Type",
+            "value": "application/javascript"
+          },
+          {
             "key": "Cache-Control",
             "value": "max-age=31536000"
           }
         ]
       },
       {
-        "source": "**",
+        "source": "**/*.js",
         "headers": [
           {
-            "key": "Cache-Control",
-            "value": "no-cache, no-store, must-revalidate"
+            "key": "Content-Type",
+            "value": "application/javascript"
+          }
+        ]
+      },
+      {
+        "source": "**/*.css",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "text/css"
           }
         ]
       }
     ]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "storage": {
+      "port": 9199
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
   }
 }
