@@ -9,7 +9,11 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
-    base: './',
+    base: '/FinRisk/',
+    server: {
+      port: 5173,
+      host: true
+    },
     define: {
       // Pass environment variables to the client-side code
       'process.env.VITE_FIREBASE_API_KEY': JSON.stringify(env.VITE_FIREBASE_API_KEY),
