@@ -4,12 +4,13 @@ import { getFirestore } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConfig = {
-  apiKey: process.env.VITE_FIREBASE_API_KEY,
-  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyAOJhx93QD2cyudxIzzlWRpN6pHio3pxsE",
+  authDomain: "finrisk-99b78.firebaseapp.com",
+  projectId: "finrisk-99b78",
+  storageBucket: "finrisk-99b78.firebasestorage.app",
+  messagingSenderId: "282325061117",
+  appId: "1:282325061117:web:4fd4fc0f11e468ea945d94",
+  measurementId: "G-4PPPNFQ2BD"
 };
 
 console.log('Firebase Config:', {
