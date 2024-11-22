@@ -3,15 +3,26 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
-  // Load env file based on `mode` in the current working directory.
   const env = loadEnv(mode, process.cwd(), '')
+  const base = mode === 'production' ? '/FinRisk/' : '/'
 
   return {
     plugins: [react()],
-    base: '/FinRisk/',
+    base,
     server: {
       port: 5173,
       host: true
+    },
+    build: {
+      outDir: 'dist',
+      sourcemap: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom', 'firebase/app', 'firebase/auth', 'firebase/firestore']
+          }
+        }
+      }
     },
     define: {
       'process.env.VITE_FIREBASE_API_KEY': JSON.stringify(env.VITE_FIREBASE_API_KEY),
@@ -21,9 +32,6 @@ export default defineConfig(({ command, mode }) => {
       'process.env.VITE_FIREBASE_MESSAGING_SENDER_ID': JSON.stringify(env.VITE_FIREBASE_MESSAGING_SENDER_ID),
       'process.env.VITE_FIREBASE_APP_ID': JSON.stringify(env.VITE_FIREBASE_APP_ID),
       'process.env.VITE_FIREBASE_MEASUREMENT_ID': JSON.stringify(env.VITE_FIREBASE_MEASUREMENT_ID)
-    },
-    optimizeDeps: {
-      exclude: ['lucide-react'],
-    },
-  };
-});
+    }
+  }
+})
