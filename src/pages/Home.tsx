@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   TrendingUp, 
@@ -21,14 +21,15 @@ import {
   Star,
   Send
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import ReviewCarousel from "../components/ReviewCarousel";
 
 export default function Home() {
   const { user } = useAuth();
 
-  const reviews = [
+  // Memoize static content
+  const reviews = useMemo(() => [
     {
       name: "Rajesh Sharma",
       role: "Senior Portfolio Manager",
@@ -62,104 +63,106 @@ export default function Home() {
       isVerified: true,
       date: "3 weeks ago"
     }
-  ];
+  ], []);
 
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="space-y-8"
-            >
-              <motion.h1 
+      <AnimatePresence>
+        <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 dark:text-white mb-8"
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="space-y-8"
               >
-                Advanced{" "}
-                <span className="relative">
-                  <span className="text-blue-600">Financial Risk</span>
-                  <motion.span
-                    className="absolute bottom-0 left-0 w-full h-1 bg-blue-600 rounded"
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    transition={{ delay: 0.5, duration: 0.8 }}
-                  />
-                </span>
-                <br />Management
-              </motion.h1>
-
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
-                className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-12"
-              >
-                AI-powered portfolio analysis and risk management platform for modern investors
-              </motion.p>
-
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.8 }}
-                className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6"
-              >
-                <Link
-                  to={user ? '/dashboard' : '/signup'}
-                  className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-                >
-                  <span>Get Started</span>
-                  <motion.span 
-                    className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                  >
-                    →
-                  </motion.span>
-                </Link>
-                <Link
-                  to="#features"
-                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300"
-                >
-                  Learn More
-                </Link>
-              </motion.div>
-            </motion.div>
-
-            {/* Stats Section */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.8 }}
-              className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
-            >
-              {[
-                { value: '10K+', label: 'Active Users' },
-                { value: '95%', label: 'Success Rate' },
-                { value: '24/7', label: 'Support' },
-                { value: '$1B+', label: 'Assets Managed' }
-              ].map((stat, index) => (
-                <motion.div
-                  key={stat.label}
+                <motion.h1 
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
-                  className="text-center"
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 dark:text-white mb-8"
                 >
-                  <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{stat.value}</h3>
-                  <p className="text-gray-600 dark:text-gray-400">{stat.label}</p>
+                  Advanced{" "}
+                  <span className="relative">
+                    <span className="text-blue-600">Financial Risk</span>
+                    <motion.span
+                      className="absolute bottom-0 left-0 w-full h-1 bg-blue-600 rounded"
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+                    />
+                  </span>
+                  <br />Management
+                </motion.h1>
+
+                <motion.p 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+                  className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-12"
+                >
+                  AI-powered portfolio analysis and risk management platform for modern investors
+                </motion.p>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" }}
+                  className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6"
+                >
+                  <Link
+                    to={user ? '/dashboard' : '/signup'}
+                    className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                  >
+                    <span>Get Started</span>
+                    <motion.span 
+                      className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ repeat: Infinity, duration: 1.5 }}
+                    >
+                      →
+                    </motion.span>
+                  </Link>
+                  <Link
+                    to="#features"
+                    className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300"
+                  >
+                    Learn More
+                  </Link>
                 </motion.div>
-              ))}
-            </motion.div>
+              </motion.div>
+
+              {/* Stats Section */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
+                className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
+              >
+                {[
+                  { value: '10K+', label: 'Active Users' },
+                  { value: '95%', label: 'Success Rate' },
+                  { value: '24/7', label: 'Support' },
+                  { value: '$1B+', label: 'Assets Managed' }
+                ].map((stat, index) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
+                    className="text-center"
+                  >
+                    <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{stat.value}</h3>
+                    <p className="text-gray-600 dark:text-gray-400">{stat.label}</p>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </AnimatePresence>
 
       {/* Features Section */}
       <section id="features" className="py-24 bg-white dark:bg-gray-800">
@@ -168,7 +171,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -254,7 +257,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
