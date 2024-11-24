@@ -1,4 +1,18 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+/**
+ * Authentication Context
+ * 
+ * Provides authentication state and methods throughout the application.
+ * Handles user authentication, registration, and session management.
+ * 
+ * Features:
+ * - User authentication state management
+ * - Login/Logout functionality
+ * - Registration
+ * - Password reset
+ * - Session persistence
+ */
+
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -10,6 +24,14 @@ import {
 } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 
+// Define the shape of our user object
+interface User {
+  id: string;
+  email: string;
+  name?: string;
+}
+
+// Define the shape of our context
 interface AuthContextType {
   user: User | null;
   signIn: (email: string, password: string) => Promise<void>;
@@ -20,13 +42,29 @@ interface AuthContextType {
   error: string | null;
 }
 
+// Create the context with a default value
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Custom hook for easy context consumption
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+/**
+ * Authentication Provider
+ * 
+ * Manages authentication state and provides methods for authentication.
+ */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Initialize auth state on mount
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
@@ -36,6 +74,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
+  /**
+   * Sign in with email and password
+   * 
+   * @param email Email address
+   * @param password Password
+   */
   const signIn = async (email: string, password: string) => {
     try {
       setError(null);
@@ -46,6 +90,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  /**
+   * Sign up with email and password
+   * 
+   * @param email Email address
+   * @param password Password
+   */
   const signUp = async (email: string, password: string) => {
     try {
       setError(null);
@@ -56,6 +106,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  /**
+   * Sign in with Google
+   */
   const signInWithGoogle = async () => {
     try {
       setError(null);
@@ -67,6 +120,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  /**
+   * Sign out
+   */
   const signOut = async () => {
     try {
       setError(null);
@@ -77,6 +133,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Provide the authentication context to children
   const value = {
     user,
     signIn,
@@ -92,12 +149,4 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {!loading && children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 }

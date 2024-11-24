@@ -1,213 +1,512 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { TrendingUp, Shield, LineChart, PieChart, Zap, Globe, ArrowRight, DollarSign, ChartBar, Percent } from 'lucide-react';
+import { 
+  TrendingUp, 
+  Shield, 
+  BarChart3, 
+  PieChart,
+  Zap,
+  RefreshCw,
+  Users,
+  Lock,
+  CheckCircle2,
+  ArrowRight, 
+  BarChart2, 
+  LineChart, 
+  Bell, 
+  CheckCircle,
+  Activity,
+  DollarSign,
+  User,
+  Star,
+  Send
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useAuth } from '../contexts/AuthContext';
+import ReviewCarousel from "../components/ReviewCarousel";
 
 export default function Home() {
+  const { user } = useAuth();
+
+  const reviews = [
+    {
+      name: "Rajesh Sharma",
+      role: "Senior Portfolio Manager",
+      company: "Axis Mutual Fund",
+      image: "/avatars/rajesh.jpg",
+      content: "FinRisk has transformed how we manage risk at Axis. The AI-powered insights have helped us make better investment decisions.",
+      rating: 5,
+      helpfulCount: 156,
+      isVerified: true,
+      date: "1 week ago"
+    },
+    {
+      name: "Priya Patel",
+      role: "Research Analyst",
+      company: "HDFC Securities",
+      image: "/avatars/priya.jpg",
+      content: "The real-time monitoring and custom alerts have made our risk management process much more efficient and proactive.",
+      rating: 5,
+      helpfulCount: 142,
+      isVerified: true,
+      date: "2 weeks ago"
+    },
+    {
+      name: "Arun Mehta",
+      role: "Risk Manager",
+      company: "Kotak Mahindra Bank",
+      image: "/avatars/arun.jpg",
+      content: "FinRisk's portfolio optimization tools have consistently helped us achieve better risk-adjusted returns for our clients.",
+      rating: 5,
+      helpfulCount: 98,
+      isVerified: true,
+      date: "3 weeks ago"
+    }
+  ];
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section with Financial Doodles */}
-      <div className="relative overflow-hidden">
-        {/* Background Pattern and Doodles */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-5 dark:opacity-[0.02]" />
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-accent/30 dark:from-primary/20 dark:to-accent/20" />
-          
-          {/* Financial Doodles Layer */}
-          <div className="absolute inset-0 opacity-10 dark:opacity-[0.05]">
-            {/* Candlestick Chart Doodle */}
-            <svg className="absolute top-1/4 left-1/4 w-64 h-64 transform -translate-x-1/2 -translate-y-1/2" viewBox="0 0 100 100">
-              <path d="M10,50 L90,50 M20,20 L20,80 M40,30 L40,70 M60,10 L60,90 M80,40 L80,60" 
-                    stroke="currentColor" strokeWidth="1" fill="none"/>
-              {/* Candlesticks */}
-              <rect x="15" y="30" width="10" height="40" stroke="currentColor" strokeWidth="1" fill="none"/>
-              <rect x="35" y="40" width="10" height="20" stroke="currentColor" strokeWidth="1" fill="none"/>
-              <rect x="55" y="20" width="10" height="60" stroke="currentColor" strokeWidth="1" fill="none"/>
-              <rect x="75" y="45" width="10" height="10" stroke="currentColor" strokeWidth="1" fill="none"/>
-            </svg>
-
-            {/* Statistical Formulas */}
-            <svg className="absolute top-3/4 right-1/4 w-64 h-64 transform rotate-12" viewBox="0 0 100 100">
-              <text x="10" y="30" className="text-xs" fill="currentColor">σ = √(Σ(x-μ)²/N)</text>
-              <text x="10" y="50" className="text-xs" fill="currentColor">β = Cov(r,m)/Var(m)</text>
-              <text x="10" y="70" className="text-xs" fill="currentColor">VaR = μ + σ × Z</text>
-            </svg>
-
-            {/* Pie Chart Doodle */}
-            <svg className="absolute bottom-1/4 left-1/3 w-48 h-48 transform -rotate-12" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="1" fill="none"/>
-              <path d="M50,50 L90,50 A40,40 0 0,1 50,90 Z" stroke="currentColor" strokeWidth="1" fill="none"/>
-              <path d="M50,50 L50,10 A40,40 0 0,1 90,50 Z" stroke="currentColor" strokeWidth="1" fill="none"/>
-            </svg>
-
-            {/* Line Graph with Moving Average */}
-            <svg className="absolute top-1/2 right-1/4 w-64 h-32 transform translate-x-1/2" viewBox="0 0 100 50">
-              <path d="M0,25 Q25,40 50,20 T100,25" stroke="currentColor" strokeWidth="1" fill="none"/>
-              <path d="M0,25 Q25,30 50,25 T100,25" stroke="currentColor" strokeWidth="1" fill="none" strokeDasharray="2 2"/>
-            </svg>
-          </div>
-        </div>
-
-        {/* Hero Content */}
-        <div className="relative pt-32 pb-20 sm:pt-40 sm:pb-24">
-          <div className="container mx-auto px-4 text-center">
-            <div className="animate-fade-in">
-              <h1 className="text-4xl sm:text-6xl font-extrabold text-text mb-6">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent animate-gradient">
-                  FinRisk
+    <div className="w-full">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-8"
+            >
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 dark:text-white mb-8"
+              >
+                Advanced{" "}
+                <span className="relative">
+                  <span className="text-blue-600">Financial Risk</span>
+                  <motion.span
+                    className="absolute bottom-0 left-0 w-full h-1 bg-blue-600 rounded"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 0.5, duration: 0.8 }}
+                  />
                 </span>
-                <br />
-                <span className="text-3xl sm:text-5xl mt-4 block">
-                  Advanced Risk Management
-                </span>
-              </h1>
-              <p className="text-xl sm:text-2xl text-text-secondary mb-10 max-w-2xl mx-auto animate-slide-up">
-                Empower your investment decisions with AI-driven risk analysis and portfolio management
-              </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-4 animate-slide-up">
+                <br />Management
+              </motion.h1>
+
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.8 }}
+                className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-12"
+              >
+                AI-powered portfolio analysis and risk management platform for modern investors
+              </motion.p>
+
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+                className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6"
+              >
                 <Link
-                  to="/signup"
-                  className="group inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-primary to-accent hover:from-primary-dark hover:to-accent transition-all duration-300"
+                  to={user ? '/dashboard' : '/signup'}
+                  className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
-                  Get Started
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  <span>Get Started</span>
+                  <motion.span 
+                    className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
+                  >
+                    →
+                  </motion.span>
                 </Link>
                 <Link
-                  to="/features"
-                  className="inline-flex items-center justify-center px-8 py-3 border border-border text-base font-medium rounded-lg text-text bg-surface hover:bg-surface/80 transition-all duration-300"
+                  to="#features"
+                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300"
                 >
                   Learn More
                 </Link>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Stats Section */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.8 }}
+              className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
+            >
+              {[
+                { value: '10K+', label: 'Active Users' },
+                { value: '95%', label: 'Success Rate' },
+                { value: '24/7', label: 'Support' },
+                { value: '$1B+', label: 'Assets Managed' }
+              ].map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
+                  className="text-center"
+                >
+                  <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{stat.value}</h3>
+                  <p className="text-gray-600 dark:text-gray-400">{stat.label}</p>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Features Grid */}
-      <div className="py-20 bg-surface">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-text mb-12">
-            Powerful Features for Risk Management
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="group bg-background rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-semibold text-text mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-text-secondary">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Stats Section with Animated Numbers */}
-      <div className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center p-6 rounded-xl bg-surface border border-border">
-                <div className="text-4xl font-bold text-gradient mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-text-secondary">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* CTA Section */}
-      <div className="py-20 bg-gradient-to-r from-primary to-accent">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">
-            Ready to Transform Your Risk Management?
-          </h2>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join thousands of investors who trust FinRisk for their portfolio analysis and risk management needs.
-          </p>
-          <Link
-            to="/signup"
-            className="inline-flex items-center justify-center px-8 py-3 border-2 border-white text-base font-medium rounded-lg text-white hover:bg-white hover:text-primary transition-all duration-300"
+      {/* Features Section */}
+      <section id="features" className="py-24 bg-white dark:bg-gray-800">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
           >
-            Start Free Trial
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Link>
-        </div>
-      </div>
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Powerful Features for Smart Investing
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Advanced tools and analytics to help you make informed investment decisions
+            </p>
+          </motion.div>
 
-      {/* Add CSS for background pattern */}
-      <style>
-        {`
-          .bg-grid-pattern {
-            background-image: linear-gradient(currentColor 1px, transparent 1px),
-                            linear-gradient(to right, currentColor 1px, transparent 1px);
-            background-size: 20px 20px;
-          }
-          
-          @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-          }
-        `}
-      </style>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {[
+              {
+                title: "AI-Powered Risk Analysis",
+                description: "Advanced machine learning algorithms analyze market patterns and predict potential risks with high accuracy",
+                icon: "/icons/brain-circuit.svg",
+                color: "bg-blue-100 dark:bg-blue-900/20",
+              },
+              {
+                title: "Portfolio Optimization",
+                description: "Smart allocation strategies to maximize returns while minimizing risk exposure",
+                icon: "/icons/line-chart.svg",
+                color: "bg-green-100 dark:bg-green-900/20",
+              },
+              {
+                title: "Real-time Monitoring",
+                description: "24/7 tracking of your investments with instant updates on market movements",
+                icon: "/icons/activity.svg",
+                color: "bg-red-100 dark:bg-red-900/20",
+              },
+              {
+                title: "Custom Alerts",
+                description: "Personalized notifications for price changes, risk levels, and market opportunities",
+                icon: "/icons/bell-ring.svg",
+                color: "bg-yellow-100 dark:bg-yellow-900/20",
+              },
+              {
+                title: "Market Intelligence",
+                description: "Comprehensive market insights and analysis from global financial experts",
+                icon: "/icons/globe.svg",
+                color: "bg-purple-100 dark:bg-purple-900/20",
+              },
+              {
+                title: "Secure Infrastructure",
+                description: "Bank-grade security measures to protect your sensitive financial data",
+                icon: "/icons/shield-check.svg",
+                color: "bg-indigo-100 dark:bg-indigo-900/20",
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="relative group"
+              >
+                <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                  <div className={`w-16 h-16 rounded-2xl ${feature.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                    <img 
+                      src={feature.icon} 
+                      alt={feature.title}
+                      className={`w-8 h-8 text-gray-900 dark:text-white`}
+                    />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    {feature.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="py-24 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Transparent Pricing for Every Need
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Choose the perfect plan that aligns with your financial goals. All plans include our core risk management features.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {[
+              {
+                name: "Starter",
+                price: "$49",
+                period: "per month",
+                description: "Perfect for individual investors and beginners",
+                features: [
+                  "Basic Risk Analysis",
+                  "Portfolio Tracking",
+                  "Market Alerts",
+                  "Email Support",
+                  "Mobile App Access"
+                ],
+                highlighted: false,
+                cta: "Get Started"
+              },
+              {
+                name: "Professional",
+                price: "$99",
+                period: "per month",
+                description: "Ideal for active traders and investment professionals",
+                features: [
+                  "Advanced Risk Analytics",
+                  "Real-time Portfolio Monitoring",
+                  "Custom Alert Configuration",
+                  "Priority Support",
+                  "API Access",
+                  "Advanced Reports",
+                  "Team Collaboration"
+                ],
+                highlighted: true,
+                cta: "Start Free Trial"
+              },
+              {
+                name: "Enterprise",
+                price: "Custom",
+                period: "custom billing",
+                description: "For large organizations and institutional investors",
+                features: [
+                  "Enterprise Risk Management",
+                  "Dedicated Account Manager",
+                  "Custom Integration",
+                  "24/7 Premium Support",
+                  "Unlimited Users",
+                  "Custom Analytics",
+                  "SLA Guarantee"
+                ],
+                highlighted: false,
+                cta: "Contact Sales"
+              }
+            ].map((plan) => (
+              <motion.div
+                key={plan.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className={`relative rounded-2xl ${
+                  plan.highlighted
+                    ? 'bg-blue-600 text-white shadow-xl scale-105'
+                    : 'bg-white dark:bg-gray-800 shadow-lg'
+                } p-8`}
+              >
+                {plan.highlighted && (
+                  <span className="absolute top-0 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                    Most Popular
+                  </span>
+                )}
+                <div className="text-center">
+                  <h3 className={`text-2xl font-bold mb-2 ${!plan.highlighted && 'text-gray-900 dark:text-white'}`}>
+                    {plan.name}
+                  </h3>
+                  <div className="mb-4">
+                    <span className="text-4xl font-bold">{plan.price}</span>
+                    <span className={`text-sm ${plan.highlighted ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'}`}>
+                      {plan.period}
+                    </span>
+                  </div>
+                  <p className={`mb-6 ${plan.highlighted ? 'text-blue-100' : 'text-gray-600 dark:text-gray-400'}`}>
+                    {plan.description}
+                  </p>
+                  <ul className="mb-8 space-y-4">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex items-center justify-center">
+                        <CheckCircle2 className={`w-5 h-5 mr-2 ${
+                          plan.highlighted ? 'text-blue-100' : 'text-blue-500'
+                        }`} />
+                        <span className={plan.highlighted ? 'text-blue-100' : 'text-gray-600 dark:text-gray-400'}>
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    className={`w-full py-3 px-6 rounded-xl font-medium transition-all duration-200 ${
+                      plan.highlighted
+                        ? 'bg-white text-blue-600 hover:bg-blue-50'
+                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                    }`}
+                  >
+                    {plan.cta}
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews Section */}
+      <section className="py-20 bg-gray-50 dark:bg-gray-900/50">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Trusted by India's Top Financial Institutions
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+              See what leading professionals from India's premier financial institutions say about FinRisk
+            </p>
+          </motion.div>
+
+          <ReviewCarousel reviews={reviews} />
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+              Let's Connect
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Have questions about our platform? Message us directly on WhatsApp.
+            </p>
+          </motion.div>
+
+          <div className="max-w-2xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300"
+            >
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                const name = (document.getElementById('name') as HTMLInputElement).value;
+                const email = (document.getElementById('email') as HTMLInputElement).value;
+                const message = (document.getElementById('message') as HTMLTextAreaElement).value;
+                
+                // Format the message for WhatsApp
+                const whatsappMessage = `*New Message from FinRisk Contact Form*%0A%0A*Name:* ${name}%0A*Email:* ${email}%0A%0A*Message:*%0A${message}`;
+                
+                // Open WhatsApp with the formatted message
+                window.open(`https://wa.me/917907758505?text=${whatsappMessage}`, '_blank');
+                
+                // Reset form
+                (e.target as HTMLFormElement).reset();
+              }} className="space-y-6">
+                {/* Name Input */}
+                <div>
+                  <label 
+                    htmlFor="name" 
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    placeholder="John Doe"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  />
+                </div>
+
+                {/* Email Input */}
+                <div>
+                  <label 
+                    htmlFor="email" 
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
+                    Your Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    placeholder="john@example.com"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  />
+                </div>
+
+                {/* Message Input */}
+                <div>
+                  <label 
+                    htmlFor="message" 
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    required
+                    placeholder="How can we help you?"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                  ></textarea>
+                </div>
+
+                {/* Submit Button */}
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 font-medium text-lg flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
+                >
+                  <span>Send via WhatsApp</span>
+                  <Send className="w-5 h-5" />
+                </motion.button>
+              </form>
+            </motion.div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
-
-const features = [
-  {
-    title: 'Advanced Risk Metrics',
-    description: 'Calculate VaR, Sharpe Ratio, and other key risk indicators with real-time market data.',
-    icon: <Shield className="w-6 h-6 text-primary" />,
-  },
-  {
-    title: 'Portfolio Analytics',
-    description: 'Track and analyze your portfolio performance with sophisticated analytics tools.',
-    icon: <LineChart className="w-6 h-6 text-primary" />,
-  },
-  {
-    title: 'Market Insights',
-    description: 'Get AI-powered market insights and trend analysis for informed decision making.',
-    icon: <TrendingUp className="w-6 h-6 text-primary" />,
-  },
-  {
-    title: 'Asset Allocation',
-    description: 'Optimize your portfolio with smart asset allocation recommendations.',
-    icon: <PieChart className="w-6 h-6 text-primary" />,
-  },
-  {
-    title: 'Real-time Monitoring',
-    description: 'Monitor your investments 24/7 with instant alerts and notifications.',
-    icon: <Zap className="w-6 h-6 text-primary" />,
-  },
-  {
-    title: 'Global Coverage',
-    description: 'Access data and analysis for markets worldwide.',
-    icon: <Globe className="w-6 h-6 text-primary" />,
-  },
-];
-
-const stats = [
-  {
-    value: '99.9%',
-    label: 'System Uptime',
-  },
-  {
-    value: '10M+',
-    label: 'Transactions Analyzed',
-  },
-  {
-    value: '50K+',
-    label: 'Active Users',
-  },
-];
