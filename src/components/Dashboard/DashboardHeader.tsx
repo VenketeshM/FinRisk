@@ -1,108 +1,149 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useAuth } from '../../contexts/AuthContext';
 import { 
-  BellIcon, 
-  CogIcon, 
   MagnifyingGlassIcon,
+  BellIcon,
   SunIcon,
   MoonIcon,
   UserCircleIcon,
-  ChevronDownIcon
-} from '@heroicons/react/24/outline';
+  Cog6ToothIcon,
+  ArrowRightOnRectangleIcon
+} from '@heroicons/react/20/solid';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface DashboardHeaderProps {
   isDarkMode: boolean;
-  setIsDarkMode: (value: boolean) => void;
+  onThemeToggle: () => void;
 }
 
-const DashboardHeader: React.FC<DashboardHeaderProps> = ({ isDarkMode, setIsDarkMode }) => {
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const portfolioValue = 125678.45;
-  const portfolioChange = 1234.56;
-  const portfolioChangePercent = 0.98;
+const DashboardHeader: React.FC<DashboardHeaderProps> = ({ isDarkMode, onThemeToggle }) => {
+  const { user, signOut } = useAuth();
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const notifications = [
+    { id: 1, message: 'Portfolio value increased by 5%', time: '2m ago' },
+    { id: 2, message: 'New market analysis available', time: '1h ago' },
+    { id: 3, message: 'Risk alert: Market volatility high', time: '3h ago' }
+  ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-white dark:bg-gray-800 shadow-sm p-4 border-b border-gray-200 dark:border-gray-700"
-    >
-      <div className="max-w-full mx-auto flex items-center justify-between px-4">
-        {/* Search Bar */}
-        <div className="flex-1 max-w-xs">
-          <div className="relative">
-            <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search assets, markets..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 border-0 focus:ring-2 focus:ring-blue-500 dark:text-gray-100"
-            />
+    <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center py-4">
+          {/* Left section - Logo and Search */}
+          <div className="flex items-center flex-1">
+            <div className="flex-shrink-0">
+              <h1 className="text-2xl font-bold text-blue-600">FinRisk</h1>
+            </div>
+            <div className="ml-8 flex-1 max-w-lg">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  placeholder="Search assets, markets, or tools..."
+                />
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Portfolio Summary */}
-        <div className="flex items-center space-x-8 mx-8">
-          <div>
-            <h2 className="text-sm text-gray-500 dark:text-gray-400">Portfolio Value</h2>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              ${portfolioValue.toLocaleString()}
-            </p>
-          </div>
-          <div>
-            <h2 className="text-sm text-gray-500 dark:text-gray-400">Today's Change</h2>
-            <p className={`text-lg font-semibold ${portfolioChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-              {portfolioChange >= 0 ? '+' : ''}${Math.abs(portfolioChange).toLocaleString()} 
-              ({portfolioChangePercent >= 0 ? '+' : ''}{portfolioChangePercent}%)
-            </p>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="flex items-center space-x-4">
-          <button 
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          >
-            {isDarkMode ? (
-              <SunIcon className="h-6 w-6 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" />
-            ) : (
-              <MoonIcon className="h-6 w-6 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" />
-            )}
-          </button>
-          
-          <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative">
-            <BellIcon className="h-6 w-6 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" />
-            <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-          </button>
-          
-          <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-            <CogIcon className="h-6 w-6 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" />
-          </button>
-
-          <div className="relative">
-            <button 
-              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-              className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          {/* Right section - User controls */}
+          <div className="flex items-center space-x-4">
+            {/* Theme Toggle */}
+            <button
+              onClick={onThemeToggle}
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
             >
-              <UserCircleIcon className="h-6 w-6 text-gray-400" />
-              <ChevronDownIcon className="h-4 w-4 text-gray-400" />
+              {isDarkMode ? (
+                <SunIcon className="h-6 w-6 text-gray-400" />
+              ) : (
+                <MoonIcon className="h-6 w-6 text-gray-600" />
+              )}
             </button>
 
-            {isUserMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
-                <a href="#profile" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Profile</a>
-                <a href="#settings" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
-                <a href="#logout" className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700">Sign out</a>
-              </div>
-            )}
-          </div>
+            {/* Notifications */}
+            <div className="relative">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <BellIcon className="h-6 w-6 text-gray-600 dark:text-gray-400" />
+                <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500" />
+              </button>
 
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            Add Funds
-          </button>
+              <AnimatePresence>
+                {showNotifications && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5"
+                  >
+                    <div className="py-2">
+                      {notifications.map((notification) => (
+                        <div
+                          key={notification.id}
+                          className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          <p className="text-sm text-gray-700 dark:text-gray-300">{notification.message}</p>
+                          <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* User Menu */}
+            <div className="relative">
+              <button
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <UserCircleIcon className="h-8 w-8 text-gray-600 dark:text-gray-400" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {user?.email}
+                </span>
+              </button>
+
+              <AnimatePresence>
+                {showUserMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5"
+                  >
+                    <div className="py-1">
+                      <button
+                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        <Cog6ToothIcon className="h-5 w-5 mr-2" />
+                        Settings
+                      </button>
+                      <button
+                        onClick={signOut}
+                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        <ArrowRightOnRectangleIcon className="h-5 w-5 mr-2" />
+                        Sign out
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
       </div>
-    </motion.div>
+    </header>
   );
 };
 

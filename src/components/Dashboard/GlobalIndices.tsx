@@ -1,42 +1,64 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/outline';
+import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/20/solid';
 
-interface IndexData {
-  symbol: string;
+interface MarketIndex {
+  id: string;
   name: string;
-  price: number;
+  value: number;
   change: number;
   changePercent: number;
-  lastUpdate?: number;
 }
 
-const GlobalIndices = () => {
-  const [indices, setIndices] = useState<IndexData[]>([
-    { symbol: 'SPX', name: 'S&P 500', price: 4532.12, change: 23.45, changePercent: 0.52 },
-    { symbol: 'DJI', name: 'Dow Jones', price: 35234.56, change: -123.45, changePercent: -0.35 },
-    { symbol: 'IXIC', name: 'NASDAQ', price: 14123.45, change: 45.67, changePercent: 0.32 },
-    { symbol: 'FTSE', name: 'FTSE 100', price: 7345.67, change: 34.56, changePercent: 0.47 },
-    { symbol: 'N225', name: 'Nikkei 225', price: 28456.78, change: -234.56, changePercent: -0.82 },
+const GlobalIndices: React.FC = () => {
+  const [indices, setIndices] = useState<MarketIndex[]>([
+    {
+      id: 'sp500',
+      name: 'S&P 500',
+      value: 4185.82,
+      change: 23.45,
+      changePercent: 0.56
+    },
+    {
+      id: 'nasdaq',
+      name: 'NASDAQ',
+      value: 14356.78,
+      change: -45.67,
+      changePercent: -0.32
+    },
+    {
+      id: 'dow',
+      name: 'Dow Jones',
+      value: 34567.89,
+      change: 156.78,
+      changePercent: 0.45
+    },
+    {
+      id: 'ftse',
+      name: 'FTSE 100',
+      value: 7456.23,
+      change: -23.45,
+      changePercent: -0.31
+    },
+    {
+      id: 'nikkei',
+      name: 'Nikkei 225',
+      value: 28789.45,
+      change: 234.56,
+      changePercent: 0.82
+    }
   ]);
 
+  // Simulate real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndices(prevIndices => 
-        prevIndices.map(index => {
-          const randomChange = (Math.random() - 0.5) * 10;
-          const newPrice = index.price + randomChange;
-          const newChange = index.change + randomChange;
-          const newChangePercent = (newChange / newPrice) * 100;
-          
-          return {
-            ...index,
-            price: newPrice,
-            change: newChange,
-            changePercent: newChangePercent,
-            lastUpdate: Date.now(),
-          };
-        })
+      setIndices(prevIndices =>
+        prevIndices.map(index => ({
+          ...index,
+          value: index.value + (Math.random() - 0.5) * 10,
+          change: index.change + (Math.random() - 0.5) * 2,
+          changePercent: index.changePercent + (Math.random() - 0.5) * 0.1
+        }))
       );
     }, 5000);
 
@@ -44,51 +66,53 @@ const GlobalIndices = () => {
   }, []);
 
   return (
-    <div className="w-full bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
-      <div className="max-w-full mx-auto">
-        <div className="flex items-center h-12 overflow-x-auto">
-          {indices.map((index, i) => (
-            <motion.div
-              key={index.symbol}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, delay: i * 0.1 }}
-              className="flex items-center space-x-4 px-6 border-r border-gray-200 dark:border-gray-700 min-w-max"
-            >
-              <div className="flex flex-col">
-                <span className="text-sm font-medium text-gray-900 dark:text-white">
-                  {index.symbol}
-                </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  {index.name}
-                </span>
-              </div>
-              
-              <div className="flex flex-col items-end">
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {index.price.toLocaleString(undefined, { 
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2 
-                  })}
-                </span>
-                <div className="flex items-center space-x-1">
-                  {index.change >= 0 ? (
-                    <ArrowTrendingUpIcon className="h-3 w-3 text-green-500" />
-                  ) : (
-                    <ArrowTrendingDownIcon className="h-3 w-3 text-red-500" />
-                  )}
-                  <span
-                    className={`text-xs ${
-                      index.change >= 0 ? 'text-green-500' : 'text-red-500'
-                    }`}
-                  >
-                    {index.change >= 0 ? '+' : ''}
-                    {index.change.toFixed(2)} ({index.changePercent.toFixed(2)}%)
-                  </span>
+    <div className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+      <div className="max-w-7xl mx-auto">
+        <div className="relative">
+          <div className="flex overflow-x-auto py-2 px-4 space-x-8 whitespace-nowrap">
+            {indices.map((index) => (
+              <motion.div
+                key={index.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center space-x-2"
+              >
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+                    {index.name}
+                  </h3>
+                  <div className="flex items-center">
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                      {index.value.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })}
+                    </span>
+                    <div
+                      className={`flex items-center ml-2 ${
+                        index.change >= 0
+                          ? 'text-green-600 dark:text-green-400'
+                          : 'text-red-600 dark:text-red-400'
+                      }`}
+                    >
+                      {index.change >= 0 ? (
+                        <ArrowUpIcon className="h-4 w-4" />
+                      ) : (
+                        <ArrowDownIcon className="h-4 w-4" />
+                      )}
+                      <span className="text-sm ml-1">
+                        {Math.abs(index.changePercent).toFixed(2)}%
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Gradient fade effect on edges */}
+          <div className="absolute top-0 bottom-0 left-0 w-8 bg-gradient-to-r from-gray-50 dark:from-gray-900" />
+          <div className="absolute top-0 bottom-0 right-0 w-8 bg-gradient-to-l from-gray-50 dark:from-gray-900" />
         </div>
       </div>
     </div>

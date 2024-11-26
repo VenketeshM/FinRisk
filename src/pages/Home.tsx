@@ -66,107 +66,131 @@ export default function Home() {
   ], []);
 
   return (
-    <div className="w-full">
+    <div className="relative w-full">
       {/* Hero Section */}
-      <AnimatePresence>
-        <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <motion.div
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 flex flex-col items-center justify-center text-center w-full">
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="space-y-8"
+            >
+              <motion.h1 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="space-y-8"
+                className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 dark:text-white mb-8"
               >
-                <motion.h1 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 dark:text-white mb-8"
-                >
-                  Advanced{" "}
-                  <span className="relative">
-                    <span className="text-blue-600">Financial Risk</span>
-                    <motion.span
-                      className="absolute bottom-0 left-0 w-full h-1 bg-blue-600 rounded"
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: 1 }}
-                      transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
-                    />
-                  </span>
-                  <br />Management
-                </motion.h1>
+                Advanced{" "}
 
-                <motion.p 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
-                  className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-12"
-                >
-                  AI-powered portfolio analysis and risk management platform for modern investors
-                </motion.p>
+                <span className="relative">
+                  <span className="text-blue-600">Financial Risk</span>
+                  <motion.span
+                    className="absolute bottom-0 left-0 w-full h-1 bg-blue-600 rounded"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+                  />
+                </span>
+                <br />Management
+              </motion.h1>
 
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" }}
-                  className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6"
-                >
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+                className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-12"
+              >
+                AI-powered portfolio analysis and risk management platform for modern investors
+              </motion.p>
+
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" }}
+                className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6"
+              >
+                {user ? (
                   <Link
-                    to={user ? '/dashboard' : '/signup'}
-                    className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    to="/dashboard"
+                    className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
                   >
-                    <span>Get Started</span>
+                    <span className="flex items-center">
+                      <BarChart2 className="w-5 h-5 mr-2" />
+                      Go to Dashboard
+                    </span>
                     <motion.span 
-                      className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="ml-2"
                       animate={{ x: [0, 5, 0] }}
                       transition={{ repeat: Infinity, duration: 1.5 }}
                     >
-                      →
+                      <ArrowRight className="w-5 h-5" />
                     </motion.span>
                   </Link>
+                ) : (
                   <Link
-                    to="#features"
-                    className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300"
+                    to="/signup"
+                    className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
                   >
-                    Learn More
+                    <span className="flex items-center">
+                      <User className="w-5 h-5 mr-2" />
+                      Get Started
+                    </span>
+                    <motion.span 
+                      className="ml-2"
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ repeat: Infinity, duration: 1.5 }}
+                    >
+                      <ArrowRight className="w-5 h-5" />
+                    </motion.span>
                   </Link>
-                </motion.div>
+                )}
+                <Link
+                  to="#features"
+                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 transform hover:scale-105"
+                >
+                  <Activity className="w-5 h-5 mr-2" />
+                  Learn More
+                </Link>
               </motion.div>
+            </motion.div>
+          </AnimatePresence>
 
-              {/* Stats Section */}
+          {/* Stats Section */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
+            className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
+          >
+            {[
+
+              { value: '10K+', label: 'Active Users' },
+              { value: '95%', label: 'Success Rate' },
+              { value: '24/7', label: 'Support' },
+              { value: '$1B+', label: 'Assets Managed' }
+            ].map((stat, index) => (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
-                className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
+                className="text-center"
               >
-                {[
-                  { value: '10K+', label: 'Active Users' },
-                  { value: '95%', label: 'Success Rate' },
-                  { value: '24/7', label: 'Support' },
-                  { value: '$1B+', label: 'Assets Managed' }
-                ].map((stat, index) => (
-                  <motion.div
-                    key={stat.label}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
-                    className="text-center"
-                  >
-                    <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{stat.value}</h3>
-                    <p className="text-gray-600 dark:text-gray-400">{stat.label}</p>
-                  </motion.div>
-                ))}
+                <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{stat.value}</h3>
+                <p className="text-gray-600 dark:text-gray-400">{stat.label}</p>
               </motion.div>
-            </div>
-          </div>
-        </section>
-      </AnimatePresence>
+            ))}
+          </motion.div>
+        </div>
+      </section>
 
       {/* Features Section */}
-      <section id="features" className="py-24 bg-white dark:bg-gray-800">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="features" className="min-h-screen py-32 bg-white dark:bg-gray-900 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 pointer-events-none" />
+        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -184,6 +208,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {[
+
               {
                 title: "AI-Powered Risk Analysis",
                 description: "Advanced machine learning algorithms analyze market patterns and predict potential risks with high accuracy",
@@ -251,8 +276,9 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-24 bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="pricing" className="min-h-screen py-32 bg-gray-50 dark:bg-gray-800 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 pointer-events-none" />
+        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -270,6 +296,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {[
+
               {
                 name: "Starter",
                 price: "$49",
@@ -401,8 +428,9 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="contact" className="min-h-screen py-32 bg-white dark:bg-gray-900 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 pointer-events-none" />
+        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

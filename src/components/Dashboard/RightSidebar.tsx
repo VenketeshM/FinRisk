@@ -1,65 +1,121 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { BellIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+import { 
+  ArrowTrendingUpIcon, 
+  ArrowTrendingDownIcon,
+  BellIcon,
+  NewspaperIcon,
+  ClockIcon
+} from '@heroicons/react/24/outline';
 
-const RightSidebar = () => {
-  const notifications = [
+interface NewsItem {
+  id: number;
+  title: string;
+  source: string;
+  time: string;
+  sentiment: 'bullish' | 'bearish' | 'neutral';
+}
+
+interface AlertItem {
+  id: number;
+  title: string;
+  description: string;
+  type: 'price' | 'volume' | 'news';
+  time: string;
+  asset: string;
+}
+
+const RightSidebar: React.FC = () => {
+  const news: NewsItem[] = [
     {
       id: 1,
-      type: 'alert',
-      title: 'AAPL Price Alert',
-      message: 'Apple Inc. is up 5% today',
-      time: '5m ago',
+      title: "Fed Signals Potential Rate Cuts in 2024",
+      source: "Financial Times",
+      time: "2h ago",
+      sentiment: "bullish"
     },
     {
       id: 2,
-      type: 'news',
-      title: 'Market Update',
-      message: 'Fed announces interest rate decision',
-      time: '15m ago',
+      title: "Tech Stocks Face Pressure Amid Valuation Concerns",
+      source: "Bloomberg",
+      time: "3h ago",
+      sentiment: "bearish"
     },
+    {
+      id: 3,
+      title: "Global Markets Show Mixed Performance",
+      source: "Reuters",
+      time: "4h ago",
+      sentiment: "neutral"
+    }
   ];
 
-  const watchlist = [
-    { symbol: 'AAPL', name: 'Apple Inc.', price: 178.45, change: 2.34 },
-    { symbol: 'MSFT', name: 'Microsoft Corp.', price: 334.23, change: -1.23 },
-    { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 134.56, change: 0.45 },
+  const alerts: AlertItem[] = [
+    {
+      id: 1,
+      title: "Price Alert",
+      description: "AAPL has crossed your target price of $180",
+      type: "price",
+      time: "5m ago",
+      asset: "AAPL"
+    },
+    {
+      id: 2,
+      title: "Volume Alert",
+      description: "Unusual trading volume detected in TSLA",
+      type: "volume",
+      time: "15m ago",
+      asset: "TSLA"
+    },
+    {
+      id: 3,
+      title: "News Alert",
+      description: "Major announcement expected for NVDA",
+      type: "news",
+      time: "1h ago",
+      asset: "NVDA"
+    }
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      className="w-80 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 p-4"
-    >
-      {/* Notifications Section */}
-      <div className="mb-8">
+    <div className="h-full flex flex-col bg-white dark:bg-gray-800">
+      {/* Market News */}
+      <div className="flex-1 p-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Notifications</h2>
-          <span className="text-sm text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+            <NewspaperIcon className="h-5 w-5 mr-2" />
+            Market News
+          </h2>
+          <button className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
             View All
-          </span>
+          </button>
         </div>
-        <div className="space-y-3">
-          {notifications.map((notification) => (
+
+        <div className="space-y-4">
+          {news.map((item) => (
             <motion.div
-              key={notification.id}
-              initial={{ opacity: 0, y: 10 }}
+              key={item.id}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+              className="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
-              <div className="flex items-start">
-                <BellIcon className="h-5 w-5 text-blue-500 mt-0.5" />
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    {notification.title}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {notification.message}
-                  </p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                    {notification.time}
-                  </p>
+              <h3 className="font-medium text-gray-900 dark:text-white">
+                {item.title}
+              </h3>
+              <div className="mt-1 flex items-center justify-between">
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  {item.source}
+                </span>
+                <div className="flex items-center space-x-2">
+                  {item.sentiment === 'bullish' && (
+                    <ArrowTrendingUpIcon className="h-4 w-4 text-green-500" />
+                  )}
+                  {item.sentiment === 'bearish' && (
+                    <ArrowTrendingDownIcon className="h-4 w-4 text-red-500" />
+                  )}
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    {item.time}
+                  </span>
                 </div>
               </div>
             </motion.div>
@@ -67,52 +123,48 @@ const RightSidebar = () => {
         </div>
       </div>
 
-      {/* Watchlist Section */}
-      <div>
+      {/* Market Alerts */}
+      <div className="border-t border-gray-200 dark:border-gray-700 p-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Watchlist</h2>
-          <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
-            <ChartBarIcon className="h-5 w-5" />
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+            <BellIcon className="h-5 w-5 mr-2" />
+            Alerts
+          </h2>
+          <button className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+            View All
           </button>
         </div>
+
         <div className="space-y-3">
-          {watchlist.map((stock) => (
+          {alerts.map((alert) => (
             <motion.div
-              key={stock.symbol}
-              initial={{ opacity: 0, y: 10 }}
+              key={alert.id}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+              className="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    {stock.symbol}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {stock.name}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    ${stock.price}
-                  </p>
-                  <p
-                    className={`text-xs font-medium ${
-                      stock.change >= 0
-                        ? 'text-green-500'
-                        : 'text-red-500'
-                    }`}
-                  >
-                    {stock.change >= 0 ? '+' : ''}
-                    {stock.change}%
-                  </p>
-                </div>
+                <h3 className="font-medium text-gray-900 dark:text-white">
+                  {alert.title}
+                </h3>
+                <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                  <ClockIcon className="h-4 w-4 mr-1" />
+                  {alert.time}
+                </span>
+              </div>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                {alert.description}
+              </p>
+              <div className="mt-2">
+                <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300">
+                  {alert.asset}
+                </span>
               </div>
             </motion.div>
           ))}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

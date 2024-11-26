@@ -1,123 +1,89 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { HomeIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon as MenuIcon, XMarkIcon as XIcon } from '@heroicons/react/24/outline';
+import LeftSidebar from '../components/dashboard/LeftSidebar';
+import RightSidebar from '../components/dashboard/RightSidebar';
+import DashboardHeader from '../components/dashboard/DashboardHeader';
+import DashboardFooter from '../components/dashboard/DashboardFooter';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
-  const navigate = useNavigate();
-  const { signOut, user } = useAuth();
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      navigate('/');
-    } catch (error) {
-      console.error('Failed to sign out:', error);
-    }
-  };
+  const [showLeftSidebar, setShowLeftSidebar] = useState(true);
+  const [showRightSidebar, setShowRightSidebar] = useState(true);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Dashboard Navbar */}
-      <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <span className="text-2xl font-bold text-blue-600 dark:text-blue-500">FinRisk</span>
-            </div>
-            <div className="flex items-center space-x-4">
-              {user && (
-                <span className="text-sm text-gray-600 dark:text-gray-300">
-                  {user.email}
-                </span>
-              )}
-              <button
-                onClick={() => navigate('/')}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
-              >
-                <HomeIcon className="h-6 w-6" />
-              </button>
-              <button
-                onClick={handleSignOut}
-                className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
-              >
-                <ArrowLeftOnRectangleIcon className="h-6 w-6" />
-                <span>Sign Out</span>
-              </button>
-            </div>
-          </div>
+      <DashboardHeader />
+      
+      <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
+        {/* Mobile menu button */}
+        <div className="lg:hidden fixed bottom-4 left-4 z-50">
+          <button
+            onClick={() => setShowLeftSidebar(!showLeftSidebar)}
+            className="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+          >
+            {showLeftSidebar ? (
+              <XIcon className="h-6 w-6" />
+            ) : (
+              <MenuIcon className="h-6 w-6" />
+            )}
+          </button>
         </div>
-      </nav>
 
-      {/* Main Content */}
-      <motion.main
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex-1"
-      >
-        {children}
-      </motion.main>
+        {/* Left Sidebar */}
+        <motion.div
+          initial={false}
+          animate={{
+            width: showLeftSidebar ? 'auto' : '0',
+            opacity: showLeftSidebar ? 1 : 0,
+          }}
+          className={`fixed lg:relative lg:block z-40 h-full ${
+            showLeftSidebar ? 'w-64' : 'w-0'
+          } transition-all duration-300 ease-in-out`}
+        >
+          <LeftSidebar />
+        </motion.div>
 
-      {/* Dashboard Footer */}
-      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="grid grid-cols-3 gap-8">
-            {/* Quick Links */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Quick Links</h3>
-              <ul className="mt-4 space-y-2">
-                <li>
-                  <button className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-                    Portfolio
-                  </button>
-                </li>
-                <li>
-                  <button className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-                    Watchlist
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-            {/* Settings */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Settings</h3>
-              <ul className="mt-4 space-y-2">
-                <li>
-                  <button className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-                    Preferences
-                  </button>
-                </li>
-                <li>
-                  <button className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-                    Market Settings
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-            {/* Market Data */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Market Data</h3>
-              <div className="mt-4 space-y-2">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  S&P 500: <span className="text-green-500">+1.2%</span>
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  NASDAQ: <span className="text-red-500">-0.5%</span>
-                </p>
-              </div>
-            </div>
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+          <div className="container mx-auto px-4 py-8">
+            {children}
           </div>
+        </main>
+
+        {/* Right Sidebar */}
+        <motion.div
+          initial={false}
+          animate={{
+            width: showRightSidebar ? 'auto' : '0',
+            opacity: showRightSidebar ? 1 : 0,
+          }}
+          className={`fixed right-0 lg:relative lg:block z-40 h-full ${
+            showRightSidebar ? 'w-80' : 'w-0'
+          } transition-all duration-300 ease-in-out`}
+        >
+          <RightSidebar />
+        </motion.div>
+
+        {/* Mobile right sidebar toggle */}
+        <div className="lg:hidden fixed bottom-4 right-4 z-50">
+          <button
+            onClick={() => setShowRightSidebar(!showRightSidebar)}
+            className="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+          >
+            {showRightSidebar ? (
+              <XIcon className="h-6 w-6" />
+            ) : (
+              <MenuIcon className="h-6 w-6" />
+            )}
+          </button>
         </div>
-      </footer>
+      </div>
+
+      <DashboardFooter />
     </div>
   );
 };

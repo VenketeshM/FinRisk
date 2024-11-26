@@ -12,13 +12,25 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AnimatePresence } from 'framer-motion';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
 import Home from './pages/Home';
-import Login from './pages/Login';
+import SignIn from './pages/SignIn'; // Import the new SignIn component
 import SignUp from './pages/SignUp';
-import Dashboard from './pages/Dashboard';
+import Layout from './components/layout/Layout';
+import PublicLayout from './components/layout/PublicLayout';
+import Portfolio from './pages/Portfolio';
+import MarketWatch from './pages/MarketWatch';
+import Exchange from './pages/Exchange';
+import Trading from './pages/Trading';
+import Orders from './pages/Orders';
+import RiskAnalysis from './pages/RiskAnalysis';
+import OptionsAndFutures from './pages/OptionsAndFutures';
+import AIInsights from './pages/AIInsights';
+import MarketHeatmap from './pages/MarketHeatmap';
+import Reports from './pages/Reports';
+import News from './pages/News';
+import Settings from './pages/Settings';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import FAQ from './pages/FAQ';
@@ -26,43 +38,118 @@ import Help from './pages/Help';
 import Contact from './pages/Contact';
 import LegalDisclaimer from './pages/LegalDisclaimer';
 import CookieSettings from './pages/CookieSettings';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import ScrollToTop from './components/ScrollToTop';
-import PageTransition from './components/PageTransition';
+import PageTransition from './components/common/PageTransition';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import LandingFooter from './components/LandingFooter';
 
-// Initialize React Query client for data fetching
+// Create a new query client instance
 const queryClient = new QueryClient();
+
+// Wrapper for protected routes
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  const location = useLocation();
+
+  if (!user) {
+    return <Navigate to="/signin" state={{ from: location }} replace />;
+  }
+
+  return <>{children}</>;
+}
 
 function AppRoutes() {
   const location = useLocation();
+  const { user } = useAuth();
   
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
         {/* Public Routes */}
-        <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-        <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
-        <Route path="/signup" element={<PageTransition><SignUp /></PageTransition>} />
-        <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
-        <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
-        <Route path="/faq" element={<PageTransition><FAQ /></PageTransition>} />
-        <Route path="/help" element={<PageTransition><Help /></PageTransition>} />
-        <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
-        <Route path="/legal-disclaimer" element={<PageTransition><LegalDisclaimer /></PageTransition>} />
-        <Route path="/cookie-settings" element={<PageTransition><CookieSettings /></PageTransition>} />
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={
+            <PageTransition>
+              <Home />
+            </PageTransition>
+          } />
+          <Route path="/signin" element={
+            user ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <PageTransition>
+                <SignIn />
+              </PageTransition>
+            )
+          } />
+          <Route path="/signup" element={
+            user ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <PageTransition>
+                <SignUp />
+              </PageTransition>
+            )
+          } />
+          <Route path="/privacy" element={
+            <PageTransition>
+              <Privacy />
+            </PageTransition>
+          } />
+          <Route path="/terms" element={
+            <PageTransition>
+              <Terms />
+            </PageTransition>
+          } />
+          <Route path="/faq" element={
+            <PageTransition>
+              <FAQ />
+            </PageTransition>
+          } />
+          <Route path="/help" element={
+            <PageTransition>
+              <Help />
+            </PageTransition>
+          } />
+          <Route path="/contact" element={
+            <PageTransition>
+              <Contact />
+            </PageTransition>
+          } />
+          <Route path="/legal-disclaimer" element={
+            <PageTransition>
+              <LegalDisclaimer />
+            </PageTransition>
+          } />
+          <Route path="/cookie-settings" element={
+            <PageTransition>
+              <CookieSettings />
+            </PageTransition>
+          } />
+        </Route>
         
-        {/* Protected Routes */}
+        {/* Protected Dashboard Routes */}
         <Route
-          path="/dashboard/*"
+          path="/dashboard"
           element={
             <ProtectedRoute>
-              <PageTransition>
-                <Dashboard />
-              </PageTransition>
+              <Layout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<Portfolio />} />
+          <Route path="portfolio" element={<Portfolio />} />
+          <Route path="market-watch" element={<MarketWatch />} />
+          <Route path="exchange" element={<Exchange />} />
+          <Route path="trading" element={<Trading />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="risk-analysis" element={<RiskAnalysis />} />
+          <Route path="options-and-futures" element={<OptionsAndFutures />} />
+          <Route path="ai-insights" element={<AIInsights />} />
+          <Route path="market-heatmap" element={<MarketHeatmap />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="news" element={<News />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
         
         {/* Fallback route for unmatched paths */}
         <Route path="*" element={<Navigate to="/" replace />} />
@@ -73,28 +160,15 @@ function AppRoutes() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <Router>
-            <ScrollToTop />
-            {/* Main layout wrapper */}
-            <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200 flex flex-col">
-              {/* Global navigation */}
-              <Navbar />
-              
-              {/* Main content area */}
-              <div className="flex-grow">
-                <AppRoutes />
-              </div>
-
-              {/* Global footer */}
-              <Footer />
-            </div>
-          </Router>
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <Router>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <AppRoutes />
+          </AuthProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </Router>
   );
 }
 
