@@ -13,7 +13,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { AnimatePresence } from 'framer-motion';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn'; // Import the new SignIn component
 import SignUp from './pages/SignUp';
@@ -63,98 +62,51 @@ function AppRoutes() {
   const { user } = useAuth();
   
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <Routes location={location} key={location.pathname}>
-        {/* Public Routes */}
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={
-            <PageTransition>
-              <Home />
-            </PageTransition>
-          } />
-          <Route path="/signin" element={
-            user ? (
-              <Navigate to="/dashboard" replace />
-            ) : (
-              <PageTransition>
-                <SignIn />
-              </PageTransition>
-            )
-          } />
-          <Route path="/signup" element={
-            user ? (
-              <Navigate to="/dashboard" replace />
-            ) : (
-              <PageTransition>
-                <SignUp />
-              </PageTransition>
-            )
-          } />
-          <Route path="/privacy" element={
-            <PageTransition>
-              <Privacy />
-            </PageTransition>
-          } />
-          <Route path="/terms" element={
-            <PageTransition>
-              <Terms />
-            </PageTransition>
-          } />
-          <Route path="/faq" element={
-            <PageTransition>
-              <FAQ />
-            </PageTransition>
-          } />
-          <Route path="/help" element={
-            <PageTransition>
-              <Help />
-            </PageTransition>
-          } />
-          <Route path="/contact" element={
-            <PageTransition>
-              <Contact />
-            </PageTransition>
-          } />
-          <Route path="/legal-disclaimer" element={
-            <PageTransition>
-              <LegalDisclaimer />
-            </PageTransition>
-          } />
-          <Route path="/cookie-settings" element={
-            <PageTransition>
-              <CookieSettings />
-            </PageTransition>
-          } />
-        </Route>
+    <Routes location={location}>
+      <Route path="/" element={<PublicLayout />}>
+        <Route index element={<Home />} />
+        <Route path="signin" element={
+          user ? <Navigate to="/dashboard" replace /> : <SignIn />
+        } />
+        <Route path="signup" element={
+          user ? <Navigate to="/dashboard" replace /> : <SignUp />
+        } />
+        <Route path="privacy" element={<Privacy />} />
+        <Route path="terms" element={<Terms />} />
+        <Route path="faq" element={<FAQ />} />
+        <Route path="help" element={<Help />} />
+        <Route path="contact" element={<Contact />} />
+        <Route path="legal-disclaimer" element={<LegalDisclaimer />} />
+        <Route path="cookie-settings" element={<CookieSettings />} />
+      </Route>
+
+      {/* Protected Dashboard Routes */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<Portfolio />} />
+        <Route path="portfolio" element={<Portfolio />} />
+        <Route path="market-watch" element={<MarketWatch />} />
+        <Route path="exchange" element={<Exchange />} />
+        <Route path="trading" element={<Trading />} />
+        <Route path="orders" element={<Orders />} />
+        <Route path="risk-analysis" element={<RiskAnalysis />} />
+        <Route path="options-and-futures" element={<OptionsAndFutures />} />
+        <Route path="ai-insights" element={<AIInsights />} />
+        <Route path="market-heatmap" element={<MarketHeatmap />} />
+        <Route path="reports" element={<Reports />} />
+        <Route path="news" element={<News />} />
+        <Route path="settings" element={<Settings />} />
+      </Route>
         
-        {/* Protected Dashboard Routes */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Layout />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<Portfolio />} />
-          <Route path="portfolio" element={<Portfolio />} />
-          <Route path="market-watch" element={<MarketWatch />} />
-          <Route path="exchange" element={<Exchange />} />
-          <Route path="trading" element={<Trading />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="risk-analysis" element={<RiskAnalysis />} />
-          <Route path="options-and-futures" element={<OptionsAndFutures />} />
-          <Route path="ai-insights" element={<AIInsights />} />
-          <Route path="market-heatmap" element={<MarketHeatmap />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="news" element={<News />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
-        
-        {/* Fallback route for unmatched paths */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AnimatePresence>
+      {/* Fallback route for unmatched paths */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
